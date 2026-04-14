@@ -1,0 +1,98 @@
+% Bipartite matching diagram - requires tikz, xcolor, graphicx
+\providecolor{onlinecol}{RGB}{220, 60, 60}
+\providecolor{offlinecol}{RGB}{50, 100, 200}
+\providecolor{edgecol}{RGB}{180, 200, 230}
+\providecolor{labelgray}{RGB}{140, 140, 140}
+
+\resizebox{\textwidth}{!}{%
+  \begin{tikzpicture}
+
+    % Edges
+    \tikzset{matchedge/.style={draw=edgecol, line width=0.4pt}}
+    \draw[matchedge] (2.7091cm, 2.5cm) -- (3.9818cm, 0.0cm);
+    \draw[matchedge] (2.7091cm, 2.5cm) -- (2.2cm, 0.0cm);
+    \draw[matchedge] (2.7091cm, 2.5cm) -- (1.4364cm, 0.0cm);
+    \draw[matchedge] (5.2545cm, 2.5cm) -- (6.5273cm, 0.0cm);
+    \draw[matchedge] (5.2545cm, 2.5cm) -- (3.9818cm, 0.0cm);
+    \draw[matchedge] (5.2545cm, 2.5cm) -- (5.0cm, 0.0cm);
+    \draw[matchedge] (7.8cm, 2.5cm) -- (7.8cm, 0.0cm);
+    \draw[matchedge] (7.8cm, 2.5cm) -- (6.5273cm, 0.0cm);
+    \draw[matchedge] (7.8cm, 2.5cm) -- (9.0727cm, 0.0cm);
+    \draw[matchedge] (10.3455cm, 2.5cm) -- (9.0727cm, 0.0cm);
+    \draw[matchedge] (10.3455cm, 2.5cm) -- (11.6182cm, 0.0cm);
+    \draw[matchedge] (10.3455cm, 2.5cm) -- (10.6cm, 0.0cm);
+    \draw[matchedge] (12.8909cm, 2.5cm) -- (11.6182cm, 0.0cm);
+    \draw[matchedge] (12.8909cm, 2.5cm) -- (13.4cm, 0.0cm);
+    \draw[matchedge] (12.8909cm, 2.5cm) -- (14.1636cm, 0.0cm);
+    \draw[matchedge] (0.8cm, 2.5cm) -- (1.4364cm, 0.0cm);
+    \draw[matchedge] (3.6cm, 2.5cm) -- (3.9818cm, 0.0cm);
+    \draw[matchedge] (6.4cm, 2.5cm) -- (6.5273cm, 0.0cm);
+    \draw[matchedge] (9.2cm, 2.5cm) -- (9.0727cm, 0.0cm);
+    \draw[matchedge] (12.0cm, 2.5cm) -- (11.6182cm, 0.0cm);
+    \draw[matchedge] (14.8cm, 2.5cm) -- (14.1636cm, 0.0cm);
+
+    % Number lines
+    \draw[onlinecol,  line width=1.2pt] (0.0cm, 2.5cm) -- (15.600000000000001cm, 2.5cm);
+    \draw[offlinecol, line width=1.2pt] (0.0cm, 0.0cm) -- (15.600000000000001cm, 0.0cm);
+
+    % Online nodes  (number inside circle = arrival order)
+    \fill[onlinecol] (2.7091cm, 2.5cm) circle (0.28cm);
+    \node[white, font=\tiny\bfseries] at (2.7091cm, 2.5cm) {1};
+    \node[labelgray, font=\tiny, above=4pt] at (2.7091cm, 2.5cm) {-4};
+    \fill[onlinecol] (5.2545cm, 2.5cm) circle (0.28cm);
+    \node[white, font=\tiny\bfseries] at (5.2545cm, 2.5cm) {2};
+    \node[labelgray, font=\tiny, above=4pt] at (5.2545cm, 2.5cm) {-2};
+    \fill[onlinecol] (7.8cm, 2.5cm) circle (0.28cm);
+    \node[white, font=\tiny\bfseries] at (7.8cm, 2.5cm) {3};
+    \node[labelgray, font=\tiny, above=4pt] at (7.8cm, 2.5cm) {0};
+    \fill[onlinecol] (10.3455cm, 2.5cm) circle (0.28cm);
+    \node[white, font=\tiny\bfseries] at (10.3455cm, 2.5cm) {4};
+    \node[labelgray, font=\tiny, above=4pt] at (10.3455cm, 2.5cm) {2};
+    \fill[onlinecol] (12.8909cm, 2.5cm) circle (0.28cm);
+    \node[white, font=\tiny\bfseries] at (12.8909cm, 2.5cm) {5};
+    \node[labelgray, font=\tiny, above=4pt] at (12.8909cm, 2.5cm) {4};
+    \fill[onlinecol] (0.8cm, 2.5cm) circle (0.28cm);
+    \node[white, font=\tiny\bfseries] at (0.8cm, 2.5cm) {6};
+    \node[labelgray, font=\tiny, above=4pt] at (0.8cm, 2.5cm) {-5.5};
+    \fill[onlinecol] (3.6cm, 2.5cm) circle (0.28cm);
+    \node[white, font=\tiny\bfseries] at (3.6cm, 2.5cm) {7};
+    \node[labelgray, font=\tiny, above=4pt] at (3.6cm, 2.5cm) {-3.3};
+    \fill[onlinecol] (6.4cm, 2.5cm) circle (0.28cm);
+    \node[white, font=\tiny\bfseries] at (6.4cm, 2.5cm) {8};
+    \node[labelgray, font=\tiny, above=4pt] at (6.4cm, 2.5cm) {-1.1};
+    \fill[onlinecol] (9.2cm, 2.5cm) circle (0.28cm);
+    \node[white, font=\tiny\bfseries] at (9.2cm, 2.5cm) {9};
+    \node[labelgray, font=\tiny, above=4pt] at (9.2cm, 2.5cm) {1.1};
+    \fill[onlinecol] (12.0cm, 2.5cm) circle (0.28cm);
+    \node[white, font=\tiny\bfseries] at (12.0cm, 2.5cm) {10};
+    \node[labelgray, font=\tiny, above=4pt] at (12.0cm, 2.5cm) {3.3};
+    \fill[onlinecol] (14.8cm, 2.5cm) circle (0.28cm);
+    \node[white, font=\tiny\bfseries] at (14.8cm, 2.5cm) {11};
+    \node[labelgray, font=\tiny, above=4pt] at (14.8cm, 2.5cm) {5.5};
+
+    % Offline nodes
+    \fill[offlinecol] (7.8cm, 0.0cm) circle (0.22cm);
+    \node[labelgray, font=\tiny, below=4pt] at (7.8cm, 0.0cm) {0};
+    \fill[offlinecol] (6.5273cm, 0.0cm) circle (0.22cm);
+    \node[labelgray, font=\tiny, below=4pt] at (6.5273cm, 0.0cm) {-1};
+    \fill[offlinecol] (9.0727cm, 0.0cm) circle (0.22cm);
+    \node[labelgray, font=\tiny, below=4pt] at (9.0727cm, 0.0cm) {1};
+    \fill[offlinecol] (3.9818cm, 0.0cm) circle (0.22cm);
+    \node[labelgray, font=\tiny, below=4pt] at (3.9818cm, 0.0cm) {-3};
+    \fill[offlinecol] (11.6182cm, 0.0cm) circle (0.22cm);
+    \node[labelgray, font=\tiny, below=4pt] at (11.6182cm, 0.0cm) {3};
+    \fill[offlinecol] (5.0cm, 0.0cm) circle (0.22cm);
+    \node[labelgray, font=\tiny, below=4pt] at (5.0cm, 0.0cm) {-2.2};
+    \fill[offlinecol] (10.6cm, 0.0cm) circle (0.22cm);
+    \node[labelgray, font=\tiny, below=4pt] at (10.6cm, 0.0cm) {2.2};
+    \fill[offlinecol] (2.2cm, 0.0cm) circle (0.22cm);
+    \node[labelgray, font=\tiny, below=4pt] at (2.2cm, 0.0cm) {-4.4};
+    \fill[offlinecol] (13.4cm, 0.0cm) circle (0.22cm);
+    \node[labelgray, font=\tiny, below=4pt] at (13.4cm, 0.0cm) {4.4};
+    \fill[offlinecol] (14.1636cm, 0.0cm) circle (0.22cm);
+    \node[labelgray, font=\tiny, below=4pt] at (14.1636cm, 0.0cm) {5};
+    \fill[offlinecol] (1.4364cm, 0.0cm) circle (0.22cm);
+    \node[labelgray, font=\tiny, below=4pt] at (1.4364cm, 0.0cm) {-5};
+
+  \end{tikzpicture}
+}% end resizebox

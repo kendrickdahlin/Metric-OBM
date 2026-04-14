@@ -1,0 +1,805 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Online Bipartite Matching Visual Simulator</title>
+  <style>
+    :root {
+      --bg: #f2f6fb;
+      --panel: #ffffff;
+      --ink: #0f172a;
+      --muted: #5b6a80;
+      --accent: #0f766e;
+      --accent-soft: #d7f6f3;
+      --line1: #2563eb;
+      --line2: #ef4444;
+      --match: #16a34a;
+      --radius: #fda4af;
+      --border: #dbe3ef;
+      --ring: rgba(15, 118, 110, 0.2);
+      --danger: #b91c1c;
+      --danger-soft: #fee2e2;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      background:
+        radial-gradient(circle at 12% 8%, #d9ebff 0%, transparent 40%),
+        radial-gradient(circle at 88% 15%, #d7f6f3 0%, transparent 34%),
+        var(--bg);
+    }
+
+    .wrap {
+      max-width: 1320px;
+      margin: 22px auto;
+      padding: 0 14px;
+      display: grid;
+      grid-template-columns: 460px 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+    }
+
+    .panel {
+      padding: 14px;
+      position: sticky;
+      top: 12px;
+    }
+
+    .titlebar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 19px;
+      letter-spacing: 0.2px;
+    }
+
+    .subtitle {
+      margin: 3px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .pill {
+      align-self: center;
+      background: var(--accent-soft);
+      color: #0f4e49;
+      border: 1px solid #b6ece5;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .status {
+      border-radius: 10px;
+      padding: 9px 10px;
+      margin-bottom: 10px;
+      font-size: 12px;
+      border: 1px solid #cce5e2;
+      background: #f1fcfb;
+      color: #155e59;
+    }
+
+    .status.error {
+      border-color: #f9b5b5;
+      background: var(--danger-soft);
+      color: var(--danger);
+    }
+
+    .group {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px;
+      margin-bottom: 10px;
+      background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+    }
+
+    .group h2 {
+      margin: 0 0 8px;
+      font-size: 13px;
+      color: #1f3450;
+      letter-spacing: 0.2px;
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      margin: 7px 0 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.35px;
+      font-weight: 600;
+    }
+
+    input,
+    select,
+    textarea,
+    button {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 9px 10px;
+      font: inherit;
+      font-size: 13px;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #57b6ac;
+      box-shadow: 0 0 0 3px var(--ring);
+    }
+
+    textarea {
+      min-height: 56px;
+      resize: vertical;
+      line-height: 1.35;
+    }
+
+    .helper {
+      margin-top: 3px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .row2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .row3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    button {
+      cursor: pointer;
+      font-weight: 700;
+      transition: transform 100ms ease, background 140ms ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+    button:active { transform: translateY(0); }
+
+    .primary {
+      background: linear-gradient(180deg, #0f766e, #0e635d);
+      color: #fff;
+      border-color: #0d5a54;
+    }
+
+    .secondary {
+      background: #eff6ff;
+      color: #1d4ed8;
+      border-color: #bfdbfe;
+    }
+
+    .soft {
+      background: #f8fafc;
+      color: #334155;
+    }
+
+    .upload {
+      margin-top: 8px;
+    }
+
+    .viz {
+      padding: 12px;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .metric {
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 9px;
+      background: #fbfdff;
+    }
+
+    .metric .k {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.35px;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .metric .v {
+      font-family: "SF Mono", "Menlo", "Consolas", monospace;
+      font-size: 18px;
+      font-weight: 700;
+      color: #0b253a;
+    }
+
+    .legend {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+      font-size: 12px;
+      color: #334155;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .swatch {
+      width: 11px;
+      height: 11px;
+      border-radius: 999px;
+    }
+
+    .line-swatch {
+      width: 18px;
+      height: 3px;
+      border-radius: 5px;
+      background: #000;
+    }
+
+    #canvas {
+      width: 100%;
+      height: 530px;
+      display: block;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+    }
+
+    pre {
+      margin: 8px 0 0;
+      padding: 11px;
+      background: #0a1325;
+      color: #d4e3ff;
+      border-radius: 10px;
+      min-height: 145px;
+      max-height: 220px;
+      overflow: auto;
+      font-family: "SF Mono", "Menlo", "Consolas", monospace;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    @media (max-width: 1080px) {
+      .wrap { grid-template-columns: 1fr; }
+      .panel { position: static; }
+      #canvas { height: 430px; }
+      .metrics { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="card panel">
+      <div class="titlebar">
+        <div>
+          <h1>Online Matching Workbench</h1>
+          <p class="subtitle">Metric bipartite matching on <strong>R</strong> with threshold radius.</p>
+        </div>
+        <span class="pill">Interactive</span>
+      </div>
+
+      <div id="status" class="status">Ready. Edit an instance and run an algorithm.</div>
+
+      <div class="group">
+        <h2>Instance</h2>
+        <div class="row3">
+          <div>
+            <label for="offlineCount">Offline count</label>
+            <input id="offlineCount" type="number" min="0" value="5" />
+          </div>
+          <div>
+            <label for="onlineCount">Online count</label>
+            <input id="onlineCount" type="number" min="0" value="6" />
+          </div>
+          <div>
+            <label for="radius">Radius r</label>
+            <input id="radius" type="number" step="0.001" min="0" value="0.9" />
+          </div>
+        </div>
+
+        <label for="offlinePositions">Offline positions</label>
+        <textarea id="offlinePositions">0, 1.2, 2.6, 4.3, 6.0</textarea>
+
+        <label for="onlinePositions">Online positions (arrival order)</label>
+        <textarea id="onlinePositions">0.4, 1.7, 2.1, 4.6, 5.4, 6.4</textarea>
+        <div class="helper">Use commas or spaces. The online list order is the arrival sequence.</div>
+      </div>
+
+      <div class="group">
+        <h2>Algorithm + Generation</h2>
+        <div class="row3">
+          <div>
+            <label for="algorithm">Algorithm</label>
+            <select id="algorithm"></select>
+          </div>
+          <div>
+            <label for="seed">Seed (optional)</label>
+            <input id="seed" type="number" placeholder="e.g. 7" />
+          </div>
+          <div>
+            <label>Random range [min, max]</label>
+            <div class="row2">
+              <input id="randMin" type="number" value="0" />
+              <input id="randMax" type="number" value="10" />
+            </div>
+          </div>
+        </div>
+
+        <div class="actions" style="margin-top: 8px;">
+          <button id="applyBtn" class="secondary">Apply Positions</button>
+          <button id="runBtn" class="primary">Run Algorithm</button>
+          <button id="randomBtn" class="soft">Generate Random</button>
+          <button id="downloadBtn" class="soft">Download JSON</button>
+        </div>
+
+        <div class="upload">
+          <label for="upload">Load JSON</label>
+          <input id="upload" type="file" accept="application/json" />
+        </div>
+      </div>
+
+      <pre id="output"></pre>
+    </section>
+
+    <section class="card viz">
+      <div class="metrics">
+        <div class="metric">
+          <div class="k">Competitive Ratio</div>
+          <div class="v" id="metricRatio">-</div>
+        </div>
+        <div class="metric">
+          <div class="k">Assigned Weight</div>
+          <div class="v" id="metricMatched">-</div>
+        </div>
+        <div class="metric">
+          <div class="k">Offline Optimum</div>
+          <div class="v" id="metricOpt">-</div>
+        </div>
+        <div class="metric">
+          <div class="k">Unmatched Online</div>
+          <div class="v" id="metricUnmatched">-</div>
+        </div>
+      </div>
+
+      <div class="legend">
+        <span class="legend-item"><span class="swatch" style="background:#2563eb"></span> Offline node</span>
+        <span class="legend-item"><span class="swatch" style="background:#ef4444"></span> Fully assigned online node</span>
+        <span class="legend-item"><span class="swatch" style="background:#f59e0b"></span> Partially assigned online node</span>
+        <span class="legend-item"><span class="swatch" style="background:#94a3b8"></span> Unmatched online node</span>
+        <span class="legend-item"><span class="line-swatch" style="background:#fecaca"></span> Radius window</span>
+        <span class="legend-item"><span class="line-swatch" style="background:#16a34a"></span> Match edge</span>
+      </div>
+
+      <canvas id="canvas"></canvas>
+    </section>
+  </div>
+
+  <script src="algorithms.js"></script>
+  <script>
+    const el = (id) => document.getElementById(id);
+    const output = el("output");
+    const statusBox = el("status");
+    const canvas = el("canvas");
+    const ctx = canvas.getContext("2d");
+    const { ALGORITHMS, runAlgorithm, distance } = window.OnlineMatchingAlgorithms;
+
+    function setStatus(message, isError = false) {
+      statusBox.textContent = message;
+      statusBox.classList.toggle("error", isError);
+    }
+
+    // Format ALG/OPT as a fraction, e.g. "3/5" or "3.500/7".
+    function ratioFraction(w, opt) {
+      if (opt === 0) return "1/1";
+      const isInt = Math.abs(w - Math.round(w)) < 1e-9;
+      return `${isInt ? Math.round(w) : w.toFixed(3)}/${opt}`;
+    }
+
+    function setMetrics(result = null) {
+      if (!result) {
+        el("metricRatio").textContent = "-";
+        el("metricMatched").textContent = "-";
+        el("metricOpt").textContent = "-";
+        el("metricUnmatched").textContent = "-";
+        return;
+      }
+      el("metricRatio").textContent = ratioFraction(result.totalAssignedWeight, result.offlineOptimumCardinality);
+      el("metricMatched").textContent = result.totalAssignedWeight.toFixed(3);
+      el("metricOpt").textContent = String(result.offlineOptimumCardinality);
+      el("metricUnmatched").textContent = String(result.unmatchedOnline.length);
+    }
+
+    function parsePositions(text) {
+      return text
+        .replace(/,/g, " ")
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean)
+        .map(Number);
+    }
+
+    function parseInstanceFromInputs() {
+      const offline = parsePositions(el("offlinePositions").value);
+      const online = parsePositions(el("onlinePositions").value);
+      const radius = Number(el("radius").value);
+      const offlineCount = Number(el("offlineCount").value);
+      const onlineCount = Number(el("onlineCount").value);
+
+      if (radius < 0 || Number.isNaN(radius)) {
+        throw new Error("Radius must be non-negative.");
+      }
+      if (offline.length !== offlineCount) {
+        throw new Error(`Offline count is ${offlineCount}, but you entered ${offline.length} positions.`);
+      }
+      if (online.length !== onlineCount) {
+        throw new Error(`Online count is ${onlineCount}, but you entered ${online.length} positions.`);
+      }
+      if (offline.some(Number.isNaN) || online.some(Number.isNaN)) {
+        throw new Error("All positions must be numeric.");
+      }
+
+      return { offline, online, radius };
+    }
+
+    function populateAlgorithmSelect() {
+      const select = el("algorithm");
+      select.innerHTML = "";
+      ALGORITHMS.forEach(({ key, label }) => {
+        const option = document.createElement("option");
+        option.value = key;
+        option.textContent = label;
+        select.appendChild(option);
+      });
+      select.value = ALGORITHMS[0].key;
+    }
+
+    function draw(instance, result) {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * devicePixelRatio;
+      canvas.height = rect.height * devicePixelRatio;
+      ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+
+      const w = rect.width;
+      const h = rect.height;
+      ctx.clearRect(0, 0, w, h);
+
+      const margin = 66;
+      const yOn  = h * 0.34;
+      const yOff = h * 0.73;
+
+      const all = [...instance.offline, ...instance.online];
+      let minX = all.length ? Math.min(...all) : 0;
+      let maxX = all.length ? Math.max(...all) : 1;
+      if (minX === maxX) {
+        minX -= 1;
+        maxX += 1;
+      }
+
+      const span = maxX - minX;
+      const mapX = (v) => margin + ((v - minX) / span) * (w - 2 * margin);
+
+      ctx.strokeStyle = "#d7e3f5";
+      ctx.lineWidth = 1;
+      for (let t = 0; t <= 4; t++) {
+        const gx = margin + (t / 4) * (w - 2 * margin);
+        ctx.beginPath();
+        ctx.moveTo(gx, yOn  - 30);
+        ctx.lineTo(gx, yOff + 30);
+        ctx.stroke();
+      }
+
+      ctx.strokeStyle = "#2563eb";
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(margin, yOff);
+      ctx.lineTo(w - margin, yOff);
+      ctx.stroke();
+
+      ctx.strokeStyle = "#ef4444";
+      ctx.beginPath();
+      ctx.moveTo(margin, yOn);
+      ctx.lineTo(w - margin, yOn);
+      ctx.stroke();
+
+      ctx.fillStyle = "#1e3a8a";
+      ctx.font = "12px Menlo, monospace";
+      ctx.fillText("Offline", 16, yOff + 4);
+      ctx.fillStyle = "#7f1d1d";
+      ctx.fillText("Online", 16, yOn + 4);
+
+      const NODE_R = 10;
+
+      const unmatchedSet = new Set(result ? result.unmatchedOnline : []);
+      const partialSet = new Set(
+        result
+          ? result.onlineAssigned
+              .map((w, i) => ({ i, w }))
+              .filter((x) => x.w > 1e-12 && x.w < 1 - 1e-12)
+              .map((x) => x.i)
+          : []
+      );
+
+      // Thin eligible edges (distance <= radius) drawn behind everything.
+      ctx.strokeStyle = "#cbd5e1";
+      ctx.lineWidth = 0.8;
+      instance.online.forEach((ox, i) => {
+        instance.offline.forEach((fx, j) => {
+          if (distance(ox, fx) <= instance.radius) {
+            ctx.beginPath();
+            ctx.moveTo(mapX(ox), yOn  + NODE_R);
+            ctx.lineTo(mapX(fx), yOff - NODE_R);
+            ctx.stroke();
+          }
+        });
+      });
+
+      instance.offline.forEach((x, j) => {
+        const cx = mapX(x);
+        ctx.fillStyle = "#2563eb";
+        ctx.beginPath();
+        ctx.arc(cx, yOff, NODE_R, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = "#1e3a8a";
+        ctx.font = "11px Menlo, monospace";
+        ctx.fillText(`o${j}`, cx - 9, yOff - 17);
+        ctx.fillText(String(x), cx - 10, yOff + 27);
+      });
+
+      instance.online.forEach((x, i) => {
+        const cx = mapX(x);
+
+        ctx.strokeStyle = "#fecaca";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(mapX(x - instance.radius), yOff - 24);
+        ctx.lineTo(mapX(x + instance.radius), yOff - 24);
+        ctx.stroke();
+
+        if (unmatchedSet.has(i) && !partialSet.has(i)) {
+          ctx.fillStyle = "#94a3b8";
+        } else if (partialSet.has(i)) {
+          ctx.fillStyle = "#f59e0b";
+        } else {
+          ctx.fillStyle = "#ef4444";
+        }
+        ctx.beginPath();
+        ctx.arc(cx, yOn, NODE_R, 0, Math.PI * 2);
+        ctx.fill();
+
+        if (unmatchedSet.has(i) && !partialSet.has(i)) {
+          ctx.fillStyle = "#64748b";
+        } else if (partialSet.has(i)) {
+          ctx.fillStyle = "#92400e";
+        } else {
+          ctx.fillStyle = "#7f1d1d";
+        }
+        ctx.font = "11px Menlo, monospace";
+        ctx.fillText(`u${i}`, cx - 9, yOn + 27);
+        ctx.fillText(String(x), cx - 10, yOn - 17);
+      });
+
+      if (result) {
+        ctx.strokeStyle = "#16a34a";
+        ctx.lineWidth = 2.1;
+        ctx.fillStyle = "#166534";
+        ctx.font = "10px Menlo, monospace";
+
+        result.matches.forEach(({ i, j, d, w }) => {
+          const x1 = mapX(instance.online[i]);
+          const x2 = mapX(instance.offline[j]);
+
+          ctx.beginPath();
+          ctx.moveTo(x1, yOn  + NODE_R);
+          ctx.lineTo(x2, yOff - NODE_R);
+          ctx.stroke();
+
+          ctx.fillText(`w=${w.toFixed(2)}`, (x1 + x2) / 2, (yOn + yOff) / 2);
+        });
+      }
+
+      ctx.fillStyle = "#475569";
+      ctx.font = "11px Menlo, monospace";
+      ctx.fillText(`x-range: [${minX.toFixed(3)}, ${maxX.toFixed(3)}]`, w - 250, 20);
+    }
+
+    function setOutput(text) {
+      output.textContent = text;
+    }
+
+    function renderSummary(instance, result) {
+      const lines = [
+        `Algorithm: ${result.algorithm}`,
+        `Mode: ${result.mode}`,
+        `Radius: ${instance.radius}`,
+        `Total assigned weight: ${result.totalAssignedWeight.toFixed(6)}`,
+        `Offline optimum matched: ${result.offlineOptimumCardinality}`,
+        `Competitive ratio (ALG/OPT): ${ratioFraction(result.totalAssignedWeight, result.offlineOptimumCardinality)} (${result.competitiveRatio.toFixed(6)})`,
+        `Unmatched online: ${result.unmatchedOnline.length}`,
+        `Unmatched offline: ${result.unmatchedOffline.length}`,
+        "",
+        "Assignments (online_idx -> offline_idx | online_pos -> offline_pos | weight | dist)",
+      ];
+
+      if (result.matches.length === 0) {
+        lines.push("(none)");
+      }
+
+      result.matches.forEach(({ i, j, d, w }) => {
+        lines.push(
+          `${i} -> ${j} | ${instance.online[i].toFixed(6)} -> ${instance.offline[j].toFixed(6)} | ${w.toFixed(6)} | ${d.toFixed(6)}`
+        );
+      });
+
+      setOutput(lines.join("\n"));
+    }
+
+    let currentInstance = null;
+    let currentResult = null;
+
+    function applyInputs() {
+      currentInstance = parseInstanceFromInputs();
+      currentResult = null;
+      draw(currentInstance, null);
+      setMetrics(null);
+      setOutput("Instance loaded. Press Run Algorithm to evaluate.");
+      setStatus("Instance loaded successfully.");
+    }
+
+    function safeAction(fn) {
+      try {
+        fn();
+      } catch (err) {
+        setStatus(err.message, true);
+      }
+    }
+
+    el("applyBtn").addEventListener("click", () => {
+      safeAction(() => {
+        applyInputs();
+      });
+    });
+
+    el("runBtn").addEventListener("click", () => {
+      safeAction(() => {
+        if (!currentInstance) {
+          applyInputs();
+        }
+
+        const algorithm = el("algorithm").value;
+        const seedRaw = el("seed").value.trim();
+        const seed = seedRaw ? Number(seedRaw) : NaN;
+
+        currentResult = runAlgorithm(currentInstance, algorithm, seed);
+        draw(currentInstance, currentResult);
+        renderSummary(currentInstance, currentResult);
+        setMetrics(currentResult);
+        setStatus(
+          `Run complete: ALG=${currentResult.totalAssignedWeight.toFixed(3)} / OPT=${currentResult.offlineOptimumCardinality}.`
+        );
+      });
+    });
+
+    el("randomBtn").addEventListener("click", () => {
+      safeAction(() => {
+        const nOff = Number(el("offlineCount").value);
+        const nOn = Number(el("onlineCount").value);
+        const lo = Number(el("randMin").value);
+        const hi = Number(el("randMax").value);
+
+        if (nOff < 0 || nOn < 0) {
+          throw new Error("Counts must be non-negative.");
+        }
+        if (lo > hi) {
+          throw new Error("Random min must be <= random max.");
+        }
+
+        const xs = Array.from({ length: nOff }, () => (Math.random() * (hi - lo) + lo).toFixed(3));
+        const ys = Array.from({ length: nOn }, () => (Math.random() * (hi - lo) + lo).toFixed(3));
+
+        el("offlinePositions").value = xs.join(", ");
+        el("onlinePositions").value = ys.join(", ");
+        applyInputs();
+        setStatus("Random instance generated and loaded.");
+      });
+    });
+
+    el("downloadBtn").addEventListener("click", () => {
+      safeAction(() => {
+        const instance = parseInstanceFromInputs();
+        const blob = new Blob([JSON.stringify(instance, null, 2) + "\n"], {
+          type: "application/json",
+        });
+
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "instance.json";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(a.href);
+
+        setStatus("Instance JSON downloaded.");
+      });
+    });
+
+    el("upload").addEventListener("change", async (e) => {
+      const file = e.target.files[0];
+      if (!file) {
+        return;
+      }
+
+      try {
+        const text = await file.text();
+        const payload = JSON.parse(text);
+
+        const offline = payload.offline || [];
+        const online = payload.online || [];
+        const radius = payload.radius;
+
+        el("offlineCount").value = offline.length;
+        el("onlineCount").value = online.length;
+        el("radius").value = radius;
+        el("offlinePositions").value = offline.join(", ");
+        el("onlinePositions").value = online.join(", ");
+
+        applyInputs();
+        setStatus(`Loaded JSON: ${file.name}`);
+      } catch (err) {
+        setStatus(err.message, true);
+      }
+    });
+
+    window.addEventListener("resize", () => {
+      if (currentInstance) {
+        draw(currentInstance, currentResult);
+      }
+    });
+
+    safeAction(() => {
+      populateAlgorithmSelect();
+      applyInputs();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+% Bipartite matching diagram - requires tikz, xcolor, graphicx
+\providecolor{onlinecol}{RGB}{220, 60, 60}
+\providecolor{offlinecol}{RGB}{50, 100, 200}
+\providecolor{edgecol}{RGB}{180, 200, 230}
+\providecolor{matchcol}{RGB}{50, 160, 80}
+\providecolor{labelgray}{RGB}{140, 140, 140}
+
+\resizebox{\textwidth}{!}{%
+  \begin{tikzpicture}
+
+    % Edges (gray) and matched edges (green, thick)
+    \tikzset{matchedge/.style={draw=edgecol, line width=0.4pt}}
+    \tikzset{matchededge/.style={draw=matchcol, line width=1.5pt}}
+    \draw[matchedge] (7.1636cm, 2.5cm) -- (7.1636cm, 0.0cm);
+    \draw[matchedge] (7.1636cm, 2.5cm) -- (8.4364cm, 0.0cm);
+    \draw[matchedge] (8.4364cm, 2.5cm) -- (7.1636cm, 0.0cm);
+    \draw[matchedge] (8.4364cm, 2.5cm) -- (8.4364cm, 0.0cm);
+    \draw[matchedge] (0.8cm, 2.5cm) -- (5.8909cm, 0.0cm);
+    \draw[matchedge] (14.8cm, 2.5cm) -- (9.7091cm, 0.0cm);
+    \draw[matchededge] (7.1636cm, 2.5cm) -- (5.8909cm, 0.0cm);
+    \draw[matchededge] (7.1636cm, 2.5cm) -- (9.7091cm, 0.0cm);
+    \draw[matchededge] (8.4364cm, 2.5cm) -- (5.8909cm, 0.0cm);
+    \draw[matchededge] (8.4364cm, 2.5cm) -- (9.7091cm, 0.0cm);
+
+    % Number lines
+    \draw[onlinecol,  line width=1.2pt] (0.0cm, 2.5cm) -- (15.600000000000001cm, 2.5cm);
+    \draw[offlinecol, line width=1.2pt] (0.0cm, 0.0cm) -- (15.600000000000001cm, 0.0cm);
+
+    % Online nodes  (number inside circle = arrival order)
+    \fill[onlinecol] (7.1636cm, 2.5cm) circle (0.28cm);
+    \node[white, font=\tiny\bfseries] at (7.1636cm, 2.5cm) {1};
+    \node[labelgray, font=\tiny, above=4pt] at (7.1636cm, 2.6cm) {0.25};
+    \fill[onlinecol] (8.4364cm, 2.5cm) circle (0.28cm);
+    \node[white, font=\tiny\bfseries] at (8.4364cm, 2.5cm) {2};
+    \node[labelgray, font=\tiny, above=4pt] at (8.4364cm, 2.6cm) {0.5};
+    \fill[onlinecol] (0.8cm, 2.5cm) circle (0.28cm);
+    \node[white, font=\tiny\bfseries] at (0.8cm, 2.5cm) {3};
+    \node[labelgray, font=\tiny, above=4pt] at (0.8cm, 2.6cm) {-1};
+    \fill[onlinecol] (14.8cm, 2.5cm) circle (0.28cm);
+    \node[white, font=\tiny\bfseries] at (14.8cm, 2.5cm) {4};
+    \node[labelgray, font=\tiny, above=4pt] at (14.8cm, 2.6cm) {1.75};
+
+    % Offline nodes
+    \fill[offlinecol] (5.8909cm, 0.0cm) circle (0.22cm);
+    \node[labelgray, font=\tiny, below=4pt] at (5.8909cm, 0.0cm) {0};
+    \fill[offlinecol] (7.1636cm, 0.0cm) circle (0.22cm);
+    \node[labelgray, font=\tiny, below=4pt] at (7.1636cm, 0.0cm) {0.25};
+    \fill[offlinecol] (8.4364cm, 0.0cm) circle (0.22cm);
+    \node[labelgray, font=\tiny, below=4pt] at (8.4364cm, 0.0cm) {0.5};
+    \fill[offlinecol] (9.7091cm, 0.0cm) circle (0.22cm);
+    \node[labelgray, font=\tiny, below=4pt] at (9.7091cm, 0.0cm) {0.75};
+
+  \end{tikzpicture}
+}% end resizebox
