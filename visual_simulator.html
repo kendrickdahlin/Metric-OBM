@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Online Bipartite Matching Visual Simulator</title>
+  <title>Adversarial Instance Designer</title>
   <style>
     :root {
       --bg: #f2f6fb;
@@ -12,10 +12,6 @@
       --muted: #5b6a80;
       --accent: #0f766e;
       --accent-soft: #d7f6f3;
-      --line1: #2563eb;
-      --line2: #ef4444;
-      --match: #16a34a;
-      --radius: #fda4af;
       --border: #dbe3ef;
       --ring: rgba(15, 118, 110, 0.2);
       --danger: #b91c1c;
@@ -39,7 +35,7 @@
       margin: 22px auto;
       padding: 0 14px;
       display: grid;
-      grid-template-columns: 460px 1fr;
+      grid-template-columns: 320px 1fr;
       gap: 14px;
       align-items: start;
     }
@@ -65,17 +61,9 @@
       margin-bottom: 10px;
     }
 
-    h1 {
-      margin: 0;
-      font-size: 19px;
-      letter-spacing: 0.2px;
-    }
+    h1 { margin: 0; font-size: 19px; letter-spacing: 0.2px; }
 
-    .subtitle {
-      margin: 3px 0 0;
-      color: var(--muted);
-      font-size: 12px;
-    }
+    .subtitle { margin: 3px 0 0; color: var(--muted); font-size: 12px; }
 
     .pill {
       align-self: center;
@@ -115,12 +103,7 @@
       background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
     }
 
-    .group h2 {
-      margin: 0 0 8px;
-      font-size: 13px;
-      color: #1f3450;
-      letter-spacing: 0.2px;
-    }
+    .group h2 { margin: 0 0 8px; font-size: 13px; color: #1f3450; letter-spacing: 0.2px; }
 
     label {
       display: block;
@@ -132,10 +115,7 @@
       font-weight: 600;
     }
 
-    input,
-    select,
-    textarea,
-    button {
+    input, select, button {
       width: 100%;
       border: 1px solid var(--border);
       border-radius: 9px;
@@ -146,42 +126,17 @@
       color: var(--ink);
     }
 
-    input:focus,
-    select:focus,
-    textarea:focus {
+    input:focus, select:focus {
       outline: none;
       border-color: #57b6ac;
       box-shadow: 0 0 0 3px var(--ring);
-    }
-
-    textarea {
-      min-height: 56px;
-      resize: vertical;
-      line-height: 1.35;
-    }
-
-    .helper {
-      margin-top: 3px;
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    .row2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-
-    .row3 {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 8px;
     }
 
     .actions {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
+      margin-top: 8px;
     }
 
     button {
@@ -193,30 +148,12 @@
     button:hover { transform: translateY(-1px); }
     button:active { transform: translateY(0); }
 
-    .primary {
-      background: linear-gradient(180deg, #0f766e, #0e635d);
-      color: #fff;
-      border-color: #0d5a54;
-    }
+    .primary  { background: linear-gradient(180deg, #0f766e, #0e635d); color: #fff; border-color: #0d5a54; }
+    .secondary { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+    .soft     { background: #f8fafc; color: #334155; }
+    .danger-btn { background: var(--danger-soft); color: var(--danger); border-color: #f9b5b5; }
 
-    .secondary {
-      background: #eff6ff;
-      color: #1d4ed8;
-      border-color: #bfdbfe;
-    }
-
-    .soft {
-      background: #f8fafc;
-      color: #334155;
-    }
-
-    .upload {
-      margin-top: 8px;
-    }
-
-    .viz {
-      padding: 12px;
-    }
+    .viz { padding: 12px; }
 
     .metrics {
       display: grid;
@@ -257,24 +194,11 @@
       color: #334155;
     }
 
-    .legend-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
+    .legend-item { display: inline-flex; align-items: center; gap: 6px; }
 
-    .swatch {
-      width: 11px;
-      height: 11px;
-      border-radius: 999px;
-    }
+    .swatch { width: 11px; height: 11px; border-radius: 999px; }
 
-    .line-swatch {
-      width: 18px;
-      height: 3px;
-      border-radius: 5px;
-      background: #000;
-    }
+    .line-swatch { width: 18px; height: 3px; border-radius: 5px; }
 
     #canvas {
       width: 100%;
@@ -283,20 +207,15 @@
       background: #fff;
       border: 1px solid var(--border);
       border-radius: 13px;
+      cursor: crosshair;
+      user-select: none;
     }
 
-    pre {
-      margin: 8px 0 0;
-      padding: 11px;
-      background: #0a1325;
-      color: #d4e3ff;
-      border-radius: 10px;
-      min-height: 145px;
-      max-height: 220px;
-      overflow: auto;
-      font-family: "SF Mono", "Menlo", "Consolas", monospace;
-      font-size: 12px;
-      line-height: 1.35;
+    .hint {
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.7;
     }
 
     @media (max-width: 1080px) {
@@ -312,101 +231,79 @@
     <section class="card panel">
       <div class="titlebar">
         <div>
-          <h1>Online Matching Workbench</h1>
-          <p class="subtitle">Metric bipartite matching on <strong>R</strong> with threshold radius.</p>
+          <h1>Adversarial Designer</h1>
+          <p class="subtitle">Build instances interactively to probe algorithm behaviour.</p>
         </div>
-        <span class="pill">Interactive</span>
+        <span class="pill">Designer</span>
       </div>
 
-      <div id="status" class="status">Ready. Edit an instance and run an algorithm.</div>
+      <div id="status" class="status">Click on a line to add a node. Drag to move. Right-click to delete.</div>
+
+      <div class="group">
+        <h2>Parameters</h2>
+        <label for="radius">Radius r</label>
+        <input id="radius" type="number" step="0.05" min="0" value="0.9" />
+      </div>
+
+      <div class="group">
+        <h2>Algorithm</h2>
+        <label for="algorithm">Algorithm</label>
+        <select id="algorithm"></select>
+        <label for="seed">Seed (optional)</label>
+        <input id="seed" type="number" placeholder="e.g. 7" />
+        <div class="actions">
+          <button id="runBtn" class="primary">Run Algorithm</button>
+          <button id="clearResultBtn" class="soft">Clear Result</button>
+        </div>
+      </div>
+
+      <div class="group">
+        <h2>Add Node</h2>
+        <label for="offlineVal">Offline value</label>
+        <div class="actions">
+          <input id="offlineVal" type="number" step="any" placeholder="e.g. 1.5" style="border-radius:9px" />
+          <button id="addOfflineBtn" class="primary">Add Offline</button>
+        </div>
+        <label for="onlineVal">Online value</label>
+        <div class="actions">
+          <input id="onlineVal" type="number" step="any" placeholder="e.g. 2.3" style="border-radius:9px" />
+          <button id="addOnlineBtn" class="primary">Add Online</button>
+        </div>
+      </div>
 
       <div class="group">
         <h2>Instance</h2>
-        <div class="row3">
-          <div>
-            <label for="offlineCount">Offline count</label>
-            <input id="offlineCount" type="number" min="0" value="5" />
-          </div>
-          <div>
-            <label for="onlineCount">Online count</label>
-            <input id="onlineCount" type="number" min="0" value="6" />
-          </div>
-          <div>
-            <label for="radius">Radius r</label>
-            <input id="radius" type="number" step="0.001" min="0" value="0.9" />
-          </div>
+        <div class="actions">
+          <button id="clearOfflineBtn" class="danger-btn">Clear Offline</button>
+          <button id="clearOnlineBtn" class="danger-btn">Clear Online</button>
         </div>
-
-        <label for="offlinePositions">Offline positions</label>
-        <textarea id="offlinePositions">0, 1.2, 2.6, 4.3, 6.0</textarea>
-
-        <label for="onlinePositions">Online positions (arrival order)</label>
-        <textarea id="onlinePositions">0.4, 1.7, 2.1, 4.6, 5.4, 6.4</textarea>
-        <div class="helper">Use commas or spaces. The online list order is the arrival sequence.</div>
+        <div class="actions">
+          <button id="exportBtn" class="secondary">Export JSON</button>
+          <button id="importBtn" class="soft">Import JSON</button>
+        </div>
+        <input id="importFile" type="file" accept="application/json" style="display:none" />
       </div>
 
-      <div class="group">
-        <h2>Algorithm + Generation</h2>
-        <div class="row3">
-          <div>
-            <label for="algorithm">Algorithm</label>
-            <select id="algorithm"></select>
-          </div>
-          <div>
-            <label for="seed">Seed (optional)</label>
-            <input id="seed" type="number" placeholder="e.g. 7" />
-          </div>
-          <div>
-            <label>Random range [min, max]</label>
-            <div class="row2">
-              <input id="randMin" type="number" value="0" />
-              <input id="randMax" type="number" value="10" />
-            </div>
-          </div>
-        </div>
-
-        <div class="actions" style="margin-top: 8px;">
-          <button id="applyBtn" class="secondary">Apply Positions</button>
-          <button id="runBtn" class="primary">Run Algorithm</button>
-          <button id="randomBtn" class="soft">Generate Random</button>
-          <button id="downloadBtn" class="soft">Download JSON</button>
-        </div>
-
-        <div class="upload">
-          <label for="upload">Load JSON</label>
-          <input id="upload" type="file" accept="application/json" />
-        </div>
+      <div class="hint">
+        <strong>Blue line (offline):</strong> click to add · drag to move · right-click to delete<br>
+        <strong>Red line (online):</strong> same interactions
       </div>
-
-      <pre id="output"></pre>
     </section>
 
     <section class="card viz">
       <div class="metrics">
-        <div class="metric">
-          <div class="k">Competitive Ratio</div>
-          <div class="v" id="metricRatio">-</div>
-        </div>
-        <div class="metric">
-          <div class="k">Assigned Weight</div>
-          <div class="v" id="metricMatched">-</div>
-        </div>
-        <div class="metric">
-          <div class="k">Offline Optimum</div>
-          <div class="v" id="metricOpt">-</div>
-        </div>
-        <div class="metric">
-          <div class="k">Unmatched Online</div>
-          <div class="v" id="metricUnmatched">-</div>
-        </div>
+        <div class="metric"><div class="k">Competitive Ratio</div><div class="v" id="metricRatio">-</div></div>
+        <div class="metric"><div class="k">Assigned Weight</div><div class="v" id="metricMatched">-</div></div>
+        <div class="metric"><div class="k">Offline Optimum</div><div class="v" id="metricOpt">-</div></div>
+        <div class="metric"><div class="k">Unmatched Online</div><div class="v" id="metricUnmatched">-</div></div>
       </div>
 
       <div class="legend">
         <span class="legend-item"><span class="swatch" style="background:#2563eb"></span> Offline node</span>
-        <span class="legend-item"><span class="swatch" style="background:#ef4444"></span> Fully assigned online node</span>
-        <span class="legend-item"><span class="swatch" style="background:#f59e0b"></span> Partially assigned online node</span>
-        <span class="legend-item"><span class="swatch" style="background:#94a3b8"></span> Unmatched online node</span>
-        <span class="legend-item"><span class="line-swatch" style="background:#fecaca"></span> Radius window</span>
+        <span class="legend-item"><span class="swatch" style="background:#ef4444"></span> Fully matched online</span>
+        <span class="legend-item"><span class="swatch" style="background:#f59e0b"></span> Partially matched online</span>
+        <span class="legend-item"><span class="swatch" style="background:#94a3b8"></span> Unmatched online</span>
+        <span class="legend-item"><span class="line-swatch" style="background:#cbd5e1"></span> Eligible edge</span>
         <span class="legend-item"><span class="line-swatch" style="background:#16a34a"></span> Match edge</span>
       </div>
 
@@ -417,164 +314,242 @@
   <script src="algorithms.js"></script>
   <script>
     const el = (id) => document.getElementById(id);
-    const output = el("output");
-    const statusBox = el("status");
-    const canvas = el("canvas");
-    const ctx = canvas.getContext("2d");
     const { ALGORITHMS, runAlgorithm, distance } = window.OnlineMatchingAlgorithms;
 
-    function setStatus(message, isError = false) {
-      statusBox.textContent = message;
-      statusBox.classList.toggle("error", isError);
+    // ── State ──────────────────────────────────────────────────────────────────
+    let offlineNodes = [0, 1.2, 2.6, 4.3, 6.0];
+    let onlineNodes  = [0.4, 1.7, 2.1, 4.6, 5.4, 6.4];
+    let radius = 0.9;
+    let result = null;
+
+    // ── Layout constants ───────────────────────────────────────────────────────
+    const NODE_R = 10;
+    const MARGIN = 66;
+    const Y_HIT  = 18; // px from axis line to count as "on the line"
+
+    const canvas = el("canvas");
+    const ctx    = canvas.getContext("2d");
+
+    // ── View ───────────────────────────────────────────────────────────────────
+    // Frozen while dragging to prevent the canvas from rescaling mid-move.
+    let frozenView = null;
+
+    function computeView() {
+      const all = [...offlineNodes, ...onlineNodes];
+      if (all.length === 0) return { vMin: 0, vMax: 10 };
+      let mn = Math.min(...all);
+      let mx = Math.max(...all);
+      if (mn === mx) { mn -= 1; mx += 1; }
+      const pad = (mx - mn) * 0.18;
+      return { vMin: mn - pad, vMax: mx + pad };
     }
 
-    // Format ALG/OPT as a fraction, e.g. "3/5" or "3.500/7".
-    function ratioFraction(w, opt) {
-      if (opt === 0) return "1/1";
-      const isInt = Math.abs(w - Math.round(w)) < 1e-9;
-      return `${isInt ? Math.round(w) : w.toFixed(3)}/${opt}`;
+    function getView() {
+      return frozenView ?? computeView();
     }
 
-    function setMetrics(result = null) {
-      if (!result) {
-        el("metricRatio").textContent = "-";
-        el("metricMatched").textContent = "-";
-        el("metricOpt").textContent = "-";
-        el("metricUnmatched").textContent = "-";
+    // ── Coordinate mapping ─────────────────────────────────────────────────────
+    function getCSSSize() {
+      const r = canvas.getBoundingClientRect();
+      return { cw: r.width, ch: r.height };
+    }
+
+    function yPositions(ch) {
+      return { yOn: ch * 0.34, yOff: ch * 0.73 };
+    }
+
+    function mapX(v, cw) {
+      const { vMin, vMax } = getView();
+      return MARGIN + ((v - vMin) / (vMax - vMin)) * (cw - 2 * MARGIN);
+    }
+
+    function unmapX(px, cw) {
+      const { vMin, vMax } = getView();
+      return vMin + ((px - MARGIN) / (cw - 2 * MARGIN)) * (vMax - vMin);
+    }
+
+    // ── Mouse utilities ────────────────────────────────────────────────────────
+    function mousePos(e) {
+      const r = canvas.getBoundingClientRect();
+      return { mx: e.clientX - r.left, my: e.clientY - r.top };
+    }
+
+    function hitTestNodes(mx, my, cw, ch) {
+      const { yOff, yOn } = yPositions(ch);
+      for (let i = 0; i < offlineNodes.length; i++) {
+        if (Math.hypot(mx - mapX(offlineNodes[i], cw), my - yOff) <= NODE_R + 4) {
+          return { side: "offline", index: i };
+        }
+      }
+      for (let i = 0; i < onlineNodes.length; i++) {
+        if (Math.hypot(mx - mapX(onlineNodes[i], cw), my - yOn) <= NODE_R + 4) {
+          return { side: "online", index: i };
+        }
+      }
+      return null;
+    }
+
+    function hitTestLine(my, ch) {
+      const { yOff, yOn } = yPositions(ch);
+      if (Math.abs(my - yOff) <= Y_HIT) return "offline";
+      if (Math.abs(my - yOn)  <= Y_HIT) return "online";
+      return null;
+    }
+
+    // ── Drag state ─────────────────────────────────────────────────────────────
+    let dragging = null; // { side: "offline"|"online", index: number }
+
+    canvas.addEventListener("mousedown", (e) => {
+      if (e.button !== 0) return;
+      const { mx, my } = mousePos(e);
+      const { cw, ch } = getCSSSize();
+
+      const hit = hitTestNodes(mx, my, cw, ch);
+      if (hit) {
+        frozenView = computeView();
+        dragging = hit;
+        canvas.style.cursor = "grabbing";
         return;
       }
-      el("metricRatio").textContent = ratioFraction(result.totalAssignedWeight, result.offlineOptimumCardinality);
-      el("metricMatched").textContent = result.totalAssignedWeight.toFixed(3);
-      el("metricOpt").textContent = String(result.offlineOptimumCardinality);
-      el("metricUnmatched").textContent = String(result.unmatchedOnline.length);
-    }
 
-    function parsePositions(text) {
-      return text
-        .replace(/,/g, " ")
-        .trim()
-        .split(/\s+/)
-        .filter(Boolean)
-        .map(Number);
-    }
+      const line = hitTestLine(my, ch);
+      if (line) {
+        const worldX = parseFloat(unmapX(mx, cw).toFixed(4));
+        if (line === "offline") {
+          offlineNodes.push(worldX);
+          setStatus(`Added offline node o${offlineNodes.length - 1} at ${worldX}.`);
+        } else {
+          onlineNodes.push(worldX);
+          setStatus(`Added online node u${onlineNodes.length - 1} at ${worldX}.`);
+        }
+        result = null;
+        setMetrics(null);
+        draw();
+      }
+    });
 
-    function parseInstanceFromInputs() {
-      const offline = parsePositions(el("offlinePositions").value);
-      const online = parsePositions(el("onlinePositions").value);
-      const radius = Number(el("radius").value);
-      const offlineCount = Number(el("offlineCount").value);
-      const onlineCount = Number(el("onlineCount").value);
+    canvas.addEventListener("mousemove", (e) => {
+      const { mx, my } = mousePos(e);
+      const { cw, ch } = getCSSSize();
 
-      if (radius < 0 || Number.isNaN(radius)) {
-        throw new Error("Radius must be non-negative.");
-      }
-      if (offline.length !== offlineCount) {
-        throw new Error(`Offline count is ${offlineCount}, but you entered ${offline.length} positions.`);
-      }
-      if (online.length !== onlineCount) {
-        throw new Error(`Online count is ${onlineCount}, but you entered ${online.length} positions.`);
-      }
-      if (offline.some(Number.isNaN) || online.some(Number.isNaN)) {
-        throw new Error("All positions must be numeric.");
+      if (dragging) {
+        const worldX = parseFloat(unmapX(mx, cw).toFixed(4));
+        if (dragging.side === "offline") offlineNodes[dragging.index] = worldX;
+        else                             onlineNodes[dragging.index]  = worldX;
+        result = null;
+        setMetrics(null);
+        draw();
+        return;
       }
 
-      return { offline, online, radius };
+      const hit = hitTestNodes(mx, my, cw, ch);
+      if (hit)                     canvas.style.cursor = "grab";
+      else if (hitTestLine(my, ch)) canvas.style.cursor = "crosshair";
+      else                          canvas.style.cursor = "default";
+    });
+
+    function endDrag() {
+      if (!dragging) return;
+      frozenView = null;
+      dragging = null;
+      canvas.style.cursor = "default";
+      draw(); // recompute view now that drag ended
     }
 
-    function populateAlgorithmSelect() {
-      const select = el("algorithm");
-      select.innerHTML = "";
-      ALGORITHMS.forEach(({ key, label }) => {
-        const option = document.createElement("option");
-        option.value = key;
-        option.textContent = label;
-        select.appendChild(option);
-      });
-      select.value = ALGORITHMS[0].key;
-    }
+    canvas.addEventListener("mouseup",    endDrag);
+    canvas.addEventListener("mouseleave", endDrag);
 
-    function draw(instance, result) {
+    canvas.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+      const { mx, my } = mousePos(e);
+      const { cw, ch } = getCSSSize();
+      const hit = hitTestNodes(mx, my, cw, ch);
+      if (!hit) return;
+
+      if (hit.side === "offline") {
+        offlineNodes.splice(hit.index, 1);
+        setStatus(`Deleted offline node o${hit.index}.`);
+      } else {
+        onlineNodes.splice(hit.index, 1);
+        setStatus(`Deleted online node u${hit.index}.`);
+      }
+      result = null;
+      setMetrics(null);
+      draw();
+    });
+
+    // ── Draw ───────────────────────────────────────────────────────────────────
+    function draw() {
       const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width * devicePixelRatio;
+      canvas.width  = rect.width  * devicePixelRatio;
       canvas.height = rect.height * devicePixelRatio;
       ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
 
-      const w = rect.width;
-      const h = rect.height;
-      ctx.clearRect(0, 0, w, h);
+      const cw = rect.width;
+      const ch = rect.height;
+      ctx.clearRect(0, 0, cw, ch);
 
-      const margin = 66;
-      const yOn  = h * 0.34;
-      const yOff = h * 0.73;
+      const { yOff, yOn } = yPositions(ch);
+      const { vMin, vMax } = getView();
 
-      const all = [...instance.offline, ...instance.online];
-      let minX = all.length ? Math.min(...all) : 0;
-      let maxX = all.length ? Math.max(...all) : 1;
-      if (minX === maxX) {
-        minX -= 1;
-        maxX += 1;
-      }
-
-      const span = maxX - minX;
-      const mapX = (v) => margin + ((v - minX) / span) * (w - 2 * margin);
-
+      // Grid lines
       ctx.strokeStyle = "#d7e3f5";
       ctx.lineWidth = 1;
       for (let t = 0; t <= 4; t++) {
-        const gx = margin + (t / 4) * (w - 2 * margin);
+        const gx = MARGIN + (t / 4) * (cw - 2 * MARGIN);
         ctx.beginPath();
-        ctx.moveTo(gx, yOn  - 30);
-        ctx.lineTo(gx, yOff + 30);
+        ctx.moveTo(gx, yOn  - 36);
+        ctx.lineTo(gx, yOff + 36);
         ctx.stroke();
       }
 
+      // Axis lines
       ctx.strokeStyle = "#2563eb";
       ctx.lineWidth = 2.5;
       ctx.beginPath();
-      ctx.moveTo(margin, yOff);
-      ctx.lineTo(w - margin, yOff);
+      ctx.moveTo(MARGIN, yOff);
+      ctx.lineTo(cw - MARGIN, yOff);
       ctx.stroke();
 
       ctx.strokeStyle = "#ef4444";
       ctx.beginPath();
-      ctx.moveTo(margin, yOn);
-      ctx.lineTo(w - margin, yOn);
+      ctx.moveTo(MARGIN, yOn);
+      ctx.lineTo(cw - MARGIN, yOn);
       ctx.stroke();
 
-      ctx.fillStyle = "#1e3a8a";
       ctx.font = "12px Menlo, monospace";
+      ctx.fillStyle = "#1e3a8a";
       ctx.fillText("Offline", 16, yOff + 4);
       ctx.fillStyle = "#7f1d1d";
       ctx.fillText("Online", 16, yOn + 4);
 
-      const NODE_R = 10;
-
-      const unmatchedSet = new Set(result ? result.unmatchedOnline : []);
-      const partialSet = new Set(
-        result
-          ? result.onlineAssigned
-              .map((w, i) => ({ i, w }))
-              .filter((x) => x.w > 1e-12 && x.w < 1 - 1e-12)
-              .map((x) => x.i)
-          : []
-      );
-
-      // Thin eligible edges (distance <= radius) drawn behind everything.
+      // Eligible edges (behind everything)
       ctx.strokeStyle = "#cbd5e1";
       ctx.lineWidth = 0.8;
-      instance.online.forEach((ox, i) => {
-        instance.offline.forEach((fx, j) => {
-          if (distance(ox, fx) <= instance.radius) {
+      onlineNodes.forEach((ox) => {
+        offlineNodes.forEach((fx) => {
+          if (distance(ox, fx) <= radius) {
             ctx.beginPath();
-            ctx.moveTo(mapX(ox), yOn  + NODE_R);
-            ctx.lineTo(mapX(fx), yOff - NODE_R);
+            ctx.moveTo(mapX(ox, cw), yOn  + NODE_R);
+            ctx.lineTo(mapX(fx, cw), yOff - NODE_R);
             ctx.stroke();
           }
         });
       });
 
-      instance.offline.forEach((x, j) => {
-        const cx = mapX(x);
+      // Radius tick marks above offline line (one per online node)
+      ctx.strokeStyle = "#fecaca";
+      ctx.lineWidth = 2;
+      onlineNodes.forEach((x) => {
+        ctx.beginPath();
+        ctx.moveTo(mapX(x - radius, cw), yOff - 24);
+        ctx.lineTo(mapX(x + radius, cw), yOff - 24);
+        ctx.stroke();
+      });
+
+      // Offline nodes
+      offlineNodes.forEach((x, j) => {
+        const cx = mapX(x, cw);
         ctx.fillStyle = "#2563eb";
         ctx.beginPath();
         ctx.arc(cx, yOff, NODE_R, 0, Math.PI * 2);
@@ -586,19 +561,24 @@
         ctx.fillText(String(x), cx - 10, yOff + 27);
       });
 
-      instance.online.forEach((x, i) => {
-        const cx = mapX(x);
+      // Online node colouring
+      const unmatchedSet = new Set(result ? result.unmatchedOnline : []);
+      const partialSet = new Set(
+        result
+          ? result.onlineAssigned
+              .map((val, idx) => ({ idx, val }))
+              .filter((entry) => entry.val > 1e-12 && entry.val < 1 - 1e-12)
+              .map((entry) => entry.idx)
+          : []
+      );
 
-        ctx.strokeStyle = "#fecaca";
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(mapX(x - instance.radius), yOff - 24);
-        ctx.lineTo(mapX(x + instance.radius), yOff - 24);
-        ctx.stroke();
+      // Online nodes
+      onlineNodes.forEach((x, i) => {
+        const cx = mapX(x, cw);
 
-        if (unmatchedSet.has(i) && !partialSet.has(i)) {
+        if (result && unmatchedSet.has(i) && !partialSet.has(i)) {
           ctx.fillStyle = "#94a3b8";
-        } else if (partialSet.has(i)) {
+        } else if (result && partialSet.has(i)) {
           ctx.fillStyle = "#f59e0b";
         } else {
           ctx.fillStyle = "#ef4444";
@@ -607,9 +587,9 @@
         ctx.arc(cx, yOn, NODE_R, 0, Math.PI * 2);
         ctx.fill();
 
-        if (unmatchedSet.has(i) && !partialSet.has(i)) {
+        if (result && unmatchedSet.has(i) && !partialSet.has(i)) {
           ctx.fillStyle = "#64748b";
-        } else if (partialSet.has(i)) {
+        } else if (result && partialSet.has(i)) {
           ctx.fillStyle = "#92400e";
         } else {
           ctx.fillStyle = "#7f1d1d";
@@ -619,187 +599,189 @@
         ctx.fillText(String(x), cx - 10, yOn - 17);
       });
 
+      // Match edges
       if (result) {
         ctx.strokeStyle = "#16a34a";
         ctx.lineWidth = 2.1;
         ctx.fillStyle = "#166534";
         ctx.font = "10px Menlo, monospace";
 
-        result.matches.forEach(({ i, j, d, w }) => {
-          const x1 = mapX(instance.online[i]);
-          const x2 = mapX(instance.offline[j]);
-
+        result.matches.forEach(({ i, j, w: mw }) => {
+          const x1 = mapX(onlineNodes[i],  cw);
+          const x2 = mapX(offlineNodes[j], cw);
           ctx.beginPath();
           ctx.moveTo(x1, yOn  + NODE_R);
           ctx.lineTo(x2, yOff - NODE_R);
           ctx.stroke();
-
-          ctx.fillText(`w=${w.toFixed(2)}`, (x1 + x2) / 2, (yOn + yOff) / 2);
+          ctx.fillText(`w=${mw.toFixed(2)}`, (x1 + x2) / 2, (yOn + yOff) / 2);
         });
       }
 
+      // x-range label
       ctx.fillStyle = "#475569";
       ctx.font = "11px Menlo, monospace";
-      ctx.fillText(`x-range: [${minX.toFixed(3)}, ${maxX.toFixed(3)}]`, w - 250, 20);
+      ctx.fillText(`x-range: [${vMin.toFixed(3)}, ${vMax.toFixed(3)}]`, cw - 250, 20);
     }
 
-    function setOutput(text) {
-      output.textContent = text;
+    // ── UI helpers ─────────────────────────────────────────────────────────────
+    const statusBox = el("status");
+
+    function setStatus(msg, isError = false) {
+      statusBox.textContent = msg;
+      statusBox.classList.toggle("error", isError);
     }
 
-    function renderSummary(instance, result) {
-      const lines = [
-        `Algorithm: ${result.algorithm}`,
-        `Mode: ${result.mode}`,
-        `Radius: ${instance.radius}`,
-        `Total assigned weight: ${result.totalAssignedWeight.toFixed(6)}`,
-        `Offline optimum matched: ${result.offlineOptimumCardinality}`,
-        `Competitive ratio (ALG/OPT): ${ratioFraction(result.totalAssignedWeight, result.offlineOptimumCardinality)} (${result.competitiveRatio.toFixed(6)})`,
-        `Unmatched online: ${result.unmatchedOnline.length}`,
-        `Unmatched offline: ${result.unmatchedOffline.length}`,
-        "",
-        "Assignments (online_idx -> offline_idx | online_pos -> offline_pos | weight | dist)",
-      ];
-
-      if (result.matches.length === 0) {
-        lines.push("(none)");
-      }
-
-      result.matches.forEach(({ i, j, d, w }) => {
-        lines.push(
-          `${i} -> ${j} | ${instance.online[i].toFixed(6)} -> ${instance.offline[j].toFixed(6)} | ${w.toFixed(6)} | ${d.toFixed(6)}`
-        );
-      });
-
-      setOutput(lines.join("\n"));
+    // Format ALG/OPT as a fraction, e.g. "3/5" or "3.500/7".
+    function ratioFraction(w, opt) {
+      if (opt === 0) return "1/1";
+      const isInt = Math.abs(w - Math.round(w)) < 1e-9;
+      return `${isInt ? Math.round(w) : w.toFixed(3)}/${opt}`;
     }
 
-    let currentInstance = null;
-    let currentResult = null;
-
-    function applyInputs() {
-      currentInstance = parseInstanceFromInputs();
-      currentResult = null;
-      draw(currentInstance, null);
-      setMetrics(null);
-      setOutput("Instance loaded. Press Run Algorithm to evaluate.");
-      setStatus("Instance loaded successfully.");
-    }
-
-    function safeAction(fn) {
-      try {
-        fn();
-      } catch (err) {
-        setStatus(err.message, true);
-      }
-    }
-
-    el("applyBtn").addEventListener("click", () => {
-      safeAction(() => {
-        applyInputs();
-      });
-    });
-
-    el("runBtn").addEventListener("click", () => {
-      safeAction(() => {
-        if (!currentInstance) {
-          applyInputs();
-        }
-
-        const algorithm = el("algorithm").value;
-        const seedRaw = el("seed").value.trim();
-        const seed = seedRaw ? Number(seedRaw) : NaN;
-
-        currentResult = runAlgorithm(currentInstance, algorithm, seed);
-        draw(currentInstance, currentResult);
-        renderSummary(currentInstance, currentResult);
-        setMetrics(currentResult);
-        setStatus(
-          `Run complete: ALG=${currentResult.totalAssignedWeight.toFixed(3)} / OPT=${currentResult.offlineOptimumCardinality}.`
-        );
-      });
-    });
-
-    el("randomBtn").addEventListener("click", () => {
-      safeAction(() => {
-        const nOff = Number(el("offlineCount").value);
-        const nOn = Number(el("onlineCount").value);
-        const lo = Number(el("randMin").value);
-        const hi = Number(el("randMax").value);
-
-        if (nOff < 0 || nOn < 0) {
-          throw new Error("Counts must be non-negative.");
-        }
-        if (lo > hi) {
-          throw new Error("Random min must be <= random max.");
-        }
-
-        const xs = Array.from({ length: nOff }, () => (Math.random() * (hi - lo) + lo).toFixed(3));
-        const ys = Array.from({ length: nOn }, () => (Math.random() * (hi - lo) + lo).toFixed(3));
-
-        el("offlinePositions").value = xs.join(", ");
-        el("onlinePositions").value = ys.join(", ");
-        applyInputs();
-        setStatus("Random instance generated and loaded.");
-      });
-    });
-
-    el("downloadBtn").addEventListener("click", () => {
-      safeAction(() => {
-        const instance = parseInstanceFromInputs();
-        const blob = new Blob([JSON.stringify(instance, null, 2) + "\n"], {
-          type: "application/json",
+    function setMetrics(r) {
+      if (!r) {
+        ["metricRatio", "metricMatched", "metricOpt", "metricUnmatched"].forEach((id) => {
+          el(id).textContent = "-";
         });
-
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = "instance.json";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(a.href);
-
-        setStatus("Instance JSON downloaded.");
-      });
-    });
-
-    el("upload").addEventListener("change", async (e) => {
-      const file = e.target.files[0];
-      if (!file) {
         return;
       }
+      el("metricRatio").textContent     = ratioFraction(r.totalAssignedWeight, r.offlineOptimumCardinality);
+      el("metricMatched").textContent   = r.totalAssignedWeight.toFixed(3);
+      el("metricOpt").textContent       = String(r.offlineOptimumCardinality);
+      el("metricUnmatched").textContent = String(r.unmatchedOnline.length);
+    }
 
+    // ── Algorithm select ───────────────────────────────────────────────────────
+    (function populateAlgorithmSelect() {
+      const select = el("algorithm");
+      ALGORITHMS.forEach(({ key, label }) => {
+        const opt = document.createElement("option");
+        opt.value = key;
+        opt.textContent = label;
+        select.appendChild(opt);
+      });
+    })();
+
+    // ── Button handlers ────────────────────────────────────────────────────────
+    el("runBtn").addEventListener("click", () => {
       try {
-        const text = await file.text();
-        const payload = JSON.parse(text);
+        if (offlineNodes.length === 0 || onlineNodes.length === 0) {
+          throw new Error("Need at least one offline and one online node.");
+        }
+        const algorithm = el("algorithm").value;
+        const seedRaw   = el("seed").value.trim();
+        const seed      = seedRaw ? Number(seedRaw) : NaN;
+        const instance  = { offline: [...offlineNodes], online: [...onlineNodes], radius };
 
-        const offline = payload.offline || [];
-        const online = payload.online || [];
-        const radius = payload.radius;
-
-        el("offlineCount").value = offline.length;
-        el("onlineCount").value = online.length;
-        el("radius").value = radius;
-        el("offlinePositions").value = offline.join(", ");
-        el("onlinePositions").value = online.join(", ");
-
-        applyInputs();
-        setStatus(`Loaded JSON: ${file.name}`);
+        result = runAlgorithm(instance, algorithm, seed);
+        draw();
+        setMetrics(result);
+        setStatus(
+          `Run complete: ALG=${result.totalAssignedWeight.toFixed(3)} / OPT=${result.offlineOptimumCardinality}.`
+        );
       } catch (err) {
         setStatus(err.message, true);
       }
     });
 
-    window.addEventListener("resize", () => {
-      if (currentInstance) {
-        draw(currentInstance, currentResult);
+    el("clearResultBtn").addEventListener("click", () => {
+      result = null;
+      setMetrics(null);
+      draw();
+      setStatus("Result cleared.");
+    });
+
+    function addNode(side, inputId) {
+      const raw = el(inputId).value.trim();
+      const v   = parseFloat(raw);
+      if (raw === "" || isNaN(v)) {
+        setStatus(`Enter a valid number for the ${side} node.`, true);
+        return;
+      }
+      if (side === "offline") {
+        offlineNodes.push(v);
+        setStatus(`Added offline node o${offlineNodes.length - 1} at ${v}.`);
+      } else {
+        onlineNodes.push(v);
+        setStatus(`Added online node u${onlineNodes.length - 1} at ${v}.`);
+      }
+      el(inputId).value = "";
+      result = null;
+      setMetrics(null);
+      draw();
+    }
+
+    el("addOfflineBtn").addEventListener("click", () => addNode("offline", "offlineVal"));
+    el("addOnlineBtn").addEventListener("click",  () => addNode("online",  "onlineVal"));
+
+    el("offlineVal").addEventListener("keydown", (e) => { if (e.key === "Enter") addNode("offline", "offlineVal"); });
+    el("onlineVal").addEventListener("keydown",  (e) => { if (e.key === "Enter") addNode("online",  "onlineVal"); });
+
+    el("clearOfflineBtn").addEventListener("click", () => {
+      offlineNodes = [];
+      result = null;
+      setMetrics(null);
+      draw();
+      setStatus("Offline nodes cleared.");
+    });
+
+    el("clearOnlineBtn").addEventListener("click", () => {
+      onlineNodes = [];
+      result = null;
+      setMetrics(null);
+      draw();
+      setStatus("Online nodes cleared.");
+    });
+
+    el("exportBtn").addEventListener("click", () => {
+      const instance = { offline: [...offlineNodes], online: [...onlineNodes], radius };
+      if (result) {
+        instance.matching = result.matches.map(({ i, j }) => [onlineNodes[i], offlineNodes[j]]);
+      }
+      const blob = new Blob([JSON.stringify(instance, null, 2) + "\n"], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "adversarial_instance.json";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(a.href);
+      setStatus("Instance exported.");
+    });
+
+    el("importBtn").addEventListener("click", () => el("importFile").click());
+
+    el("importFile").addEventListener("change", async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      try {
+        const payload = JSON.parse(await file.text());
+        offlineNodes = payload.offline || [];
+        onlineNodes  = payload.online  || [];
+        radius = payload.radius ?? radius;
+        el("radius").value = radius;
+        result = null;
+        setMetrics(null);
+        draw();
+        setStatus(`Loaded: ${file.name}`);
+      } catch (err) {
+        setStatus(err.message, true);
       }
     });
 
-    safeAction(() => {
-      populateAlgorithmSelect();
-      applyInputs();
+    el("radius").addEventListener("input", () => {
+      const v = Number(el("radius").value);
+      if (!isNaN(v) && v >= 0) {
+        radius = v;
+        result = null;
+        setMetrics(null);
+        draw();
+      }
     });
+
+    window.addEventListener("resize", draw);
+
+    draw();
   </script>
 </body>
 </html>
